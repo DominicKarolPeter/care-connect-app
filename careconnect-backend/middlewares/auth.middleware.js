@@ -1,0 +1,21 @@
+// middlewares/auth.middleware.js
+const admin = require('../config/firebase');
+
+const authenticateFirebaseToken = async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ message: 'Missing or invalid token' });
+  }
+
+  const idToken = authHeader.split(' ')[1];
+
+  try {
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    req.user = decodedToken;
+    next();
+  } catch (err) {
+    return res.status(401).json({ message: 'Invalid Firebase token', error: err.message });
+  }
+};
+
+module.exports = authenticateFirebaseToken;

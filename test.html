@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Firebase Login Test</title>
+  <!-- ✅ Use v9 compat scripts for browser compatibility -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+</head>
+<body>
+  <h2>Firebase Login</h2>
+
+  <input type="email" id="email" placeholder="Email" /><br /><br />
+  <input type="password" id="password" placeholder="Password" /><br /><br />
+  <button onclick="login()">Login & Get Token</button>
+
+  <pre id="output" style="margin-top: 20px; background: #f0f0f0; padding: 10px;"></pre>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAiY9RLRTA-NDUA7RTNu3msTyYXj-KEaKk",
+      authDomain: "careconnect-38291.firebaseapp.com",
+      projectId: "careconnect-38291",
+      storageBucket: "careconnect-38291.appspot.com",
+      messagingSenderId: "365622970519",
+      appId: "1:365622970519:web:19aa2a8de96356329801d2",
+      measurementId: "G-J4YVCYSLD0"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    async function login() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const userCredential = await auth.signInWithEmailAndPassword(email, password);
+        const token = await userCredential.user.getIdToken();
+        document.getElementById('output').innerText = `Your Firebase ID Token:\n\n${token}`;
+        console.log('Token:', token);
+      } catch (error) {
+        document.getElementById('output').innerText = `Error: ${error.message}`;
+      }
+    }
+  </script>
+</body>
+</html>
